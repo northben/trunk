@@ -1,0 +1,203 @@
+{
+    "meta": {
+        "name": "TA-Trello", 
+        "restRoot": "TA_Trello", 
+        "version": "1.0.0", 
+        "displayName": "Trello", 
+        "apiVersion": "3.0.0"
+    }, 
+    "pages": {
+        "configuration": {
+            "tabs": [
+                {
+                    "name": "logging", 
+                    "entity": [
+                        {
+                            "type": "singleSelect", 
+                            "label": "Log level", 
+                            "options": {
+                                "disableSearch": true, 
+                                "autoCompleteFields": [
+                                    {
+                                        "value": "DEBUG", 
+                                        "label": "DEBUG"
+                                    }, 
+                                    {
+                                        "value": "INFO", 
+                                        "label": "INFO"
+                                    }, 
+                                    {
+                                        "value": "WARNING", 
+                                        "label": "WARNING"
+                                    }, 
+                                    {
+                                        "value": "ERROR", 
+                                        "label": "ERROR"
+                                    }, 
+                                    {
+                                        "value": "CRITICAL", 
+                                        "label": "CRITICAL"
+                                    }
+                                ]
+                            }, 
+                            "defaultValue": "INFO", 
+                            "field": "loglevel"
+                        }
+                    ], 
+                    "title": "Logging"
+                }
+            ], 
+            "title": "Configuration", 
+            "description": "Set up your add-on"
+        }, 
+        "inputs": {
+            "services": [
+                {
+                    "name": "trello_input", 
+                    "entity": [
+                        {
+                            "help": "Enter a unique name for the data input", 
+                            "required": true, 
+                            "type": "text", 
+                            "label": "Name", 
+                            "validators": [
+                                {
+                                    "type": "regex", 
+                                    "errorMsg": "Input Name must start with a letter and followed by alphabetic letters, digits or underscores.", 
+                                    "pattern": "^[a-zA-Z]\\w*$"
+                                }, 
+                                {
+                                    "type": "string", 
+                                    "errorMsg": "Length of input name should be between 1 and 100", 
+                                    "minLength": 1, 
+                                    "maxLength": 100
+                                }
+                            ], 
+                            "field": "name"
+                        }, 
+                        {
+                            "help": "Time interval of input in seconds.", 
+                            "required": true, 
+                            "type": "text", 
+                            "label": "Interval", 
+                            "validators": [
+                                {
+                                    "type": "regex", 
+                                    "errorMsg": "Interval must be an integer.", 
+                                    "pattern": "^\\-[1-9]\\d*$|^\\d*$"
+                                }
+                            ], 
+                            "field": "interval"
+                        }, 
+                        {
+                            "validators": [
+                                {
+                                    "type": "string", 
+                                    "errorMsg": "Length of index name should be between 1 and 80.", 
+                                    "minLength": 1, 
+                                    "maxLength": 80
+                                }
+                            ], 
+                            "defaultValue": "default", 
+                            "required": true, 
+                            "type": "singleSelect", 
+                            "label": "Index", 
+                            "field": "index", 
+                            "options": {
+                                "endpointUrl": "data/indexes", 
+                                "blackList": "^_.*$", 
+                                "createSearchChoice": true
+                            }
+                        }, 
+                        {
+                            "help": "Get your key here: https://trello.com/app-key\n", 
+                            "required": true, 
+                            "type": "text", 
+                            "label": "Trello Key", 
+                            "validators": [
+                                {
+                                    "type": "string", 
+                                    "errorMsg": "Max length of text input is 8192", 
+                                    "minLength": 0, 
+                                    "maxLength": 8192
+                                }
+                            ], 
+                            "field": "trello_key"
+                        }, 
+                        {
+                            "help": "Keep it secret. Keep it safe. Get your token here: https://trello.com/1/authorize?expiration=never&scope=read,write,account&response_type=token&name=Server%20Token&key=YOURKEY", 
+                            "validators": [
+                                {
+                                    "type": "string", 
+                                    "errorMsg": "Max length of password is 8192", 
+                                    "minLength": 0, 
+                                    "maxLength": 8192
+                                }
+                            ], 
+                            "required": true, 
+                            "type": "text", 
+                            "label": "Trello Token", 
+                            "field": "trello_token", 
+                            "encrypted": true
+                        }
+                    ], 
+                    "title": "Trello Input"
+                }
+            ], 
+            "title": "Inputs", 
+            "description": "Manage your data inputs", 
+            "table": {
+                "actions": [
+                    "edit", 
+                    "enable", 
+                    "delete", 
+                    "clone"
+                ], 
+                "header": [
+                    {
+                        "label": "Name", 
+                        "field": "name"
+                    }, 
+                    {
+                        "label": "Interval", 
+                        "field": "interval"
+                    }, 
+                    {
+                        "label": "Index", 
+                        "field": "index"
+                    }, 
+                    {
+                        "label": "Status", 
+                        "field": "disabled"
+                    }
+                ], 
+                "moreInfo": [
+                    {
+                        "label": "Name", 
+                        "field": "name"
+                    }, 
+                    {
+                        "label": "Interval", 
+                        "field": "interval"
+                    }, 
+                    {
+                        "label": "Index", 
+                        "field": "index"
+                    }, 
+                    {
+                        "label": "Status", 
+                        "field": "disabled"
+                    }, 
+                    {
+                        "label": "Trello Key", 
+                        "field": "trello_key"
+                    }, 
+                    {
+                        "label": "Trello Token", 
+                        "field": "trello_token"
+                    }
+                ]
+            }
+        }
+    }
+}
