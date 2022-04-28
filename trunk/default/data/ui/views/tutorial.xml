@@ -1,0 +1,148 @@
+<dashboard>
+  <label>Tutorial</label>
+  <row>
+    <panel>
+      <title>Overview</title>
+      <html>
+      <h3>This tutorial will explain how to get started with Trunk!</h3>
+      <p>Trunk is the personal project of Ben Northway. Trunk, integration between Trello and Splunk, provides easy, real-time status management reports and operational metrics.</p>
+      <p>Before you get started with Trunk you'll need to create a free account on Trello.com. Then, once signed in, continue below.</p>
+      <p>On this page:
+<ol>
+<li><a href="#create_board">Create a board</a></li>
+<li><a href="#add_tasks">Add task cards</a></li>
+<li><a href="#engagement_info">Add engagement info cards</a></li>
+<li><a href="#use_trello">Use Trello</a></li>
+<li><a href="#create_reports">Create reports in Trunk</a></li>
+</ol>
+</p>
+      </html>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <html><a name="create_board"></a>
+      <h2>Create a Trello board</h2>
+      <p>Trunk indexes Trello board activity in real time, so the first step is to create a Trello board. The easiest way to do that is to copy an existing board. Try one of these:</p>
+      </html>
+      <table>
+        <title>Trunk Template Boards</title>
+        <search ref="trunk template boards"></search>
+        <option name="drilldown">row</option>
+        <fields>action_data_board_name</fields>
+        <drilldown target="_blank">
+          <link>https://trello.com/b/$row.action_data_board_shortLink$</link>
+        </drilldown>
+      </table>
+      <html>
+        <p>After selecting a template board above, copy the board in Trello:</p>
+        <img src="/static/app/trunk/2018-11-11_17-13-56.png" style="width:32%;border:0;padding:5;"></img>
+        <img src="/static/app/trunk/2018-11-11_17-14-09.png" style="width:32%;border:0;padding:5;"></img>
+        <img src="/static/app/trunk/2018-11-11_17-14-55.png" style="width:32%;border:0;padding:5;"></img>
+      <p>After copying the board, allow Trunk 30 seconds to create a webhook subscription for your new board.</p>
+      </html>
+    </panel>
+    <panel>
+      <html><a name="add_tasks"></a>
+      <h2>Add Tasks</h2>
+      <p>Create a Trello card for each SOW item and place it in a list named "To Do". Many project management methodologies call this the "backlog". Add a comment to provide additional detail about the task.</p>
+      <p>It is sometimes useful to use multiple "To Do" lists. For example, one list for this week's backlog, and another list for next week. To do this in Trello, follow this naming pattern: "To Do: week 1", "To Do: next week", etc.</p>
+      <p>Once you have created one "To Do" card, you can use the <a href="build_a_board_workshop">Build-a-Board Workshop</a> to copy cards from other engagements.</p>
+<p><img src="/static/app/trunk/2018-11-11_23-05-33.png" style="width:60%;border:0;padding:5;"/></p>
+      </html>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <html><a name="engagement_info"></a>
+      <h2>Add engagement info</h2>
+      <p>Trunk extracts stakeholder information, customer name, dates, etc. from Trello cards</p>
+      <div>For example, create a card in the "Stakeholders" list with title: <blockquote><b>Ben Northway</b></blockquote>description:<blockquote>email: northben@pixelchef.net<br/> location: Tampa, FL<br/> role: Consultant<br/> organization: Pixelchef<br/> phone: 123-456-7890<br/></blockquote> </div>
+      <div>Daily status reports are addressed to stakeholders of the "Splunk" organization. Stakeholders of all other organizations appear on the weekly status report.</div>
+      </html>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <html><a name="use_trello"></a>
+      <h2>Use Trello</h2>
+      <p>Key points to remember as you're working. These patterns keep me focused on the task at hand, and it makes a better status report anyway.</p>
+      
+      <h3>Add comments as you work</h3>
+      <div>Comments are foundational to quality work. Make comments as you go to describe the work you're doing: who, what, where, when, why. <a href="https://en.wikipedia.org/wiki/Five_Ws">Five Ws - Wikipedia</a></div>
+      <div><img src="/static/app/trunk/2018-11-11_18-40-09.png" style="width:40%;border:0;padding:5;"/></div>
+      
+      <h3>Rename the card title as the task unfolds</h3>
+      <p>I like to keep the card title aligned with the objective of the task, even as the scope of the task changes. For example, I might discover an error message and create a new card titled, "Troubleshoot error message x" and add a comment describing the problem using the 5 W's.</p>
+      <p>After a short investigation, I identify a straightforward solution, and review the situation with my customer. We decide to implement the solution, so I rename the card to reflect this, "Reconfigure y to fix problem x".</p>
+      
+      <h3>Split large tasks up into multiple cards</h3>
+      <p>Life is not always easy. Sometimes, troubleshooting involves many steps, and the next step is a recommendation, or a separate task because the resolution is complex, etc. When in doubt, it's better to create more cards than fewer. If you find yourself jumping between cards in order to work on a task, that could be a sign that you have divided the task up into too many cards. If you find the card difficult to easily explain, that could be a sign that you should further divide the task into separate cards.</p>
+      
+      <h3>Manage your Work in Process</h3>
+      <p>The importance of managing WIP is well documented, but often disregarded. <a href="https://www.atlassian.com/agile/kanban/wip-limits">Putting the 'flow' back in workflow with WIP limits</a></p>
+      <p>I'm working at my best when I have 3-5 items in process.</p>
+      
+      <h3>If you're stuck for any reason, there should be a card in Blockers</h3>
+      <p>Being blocked on a task is almost always a sure sign of trouble. If you're stuck for any reason, immediately add a comment and ask for help through the appropriate channels. Even (Especially) if it's a customer-imposed issue, ensure your AM/EM/DM/FM knows about this.</p>
+      
+      
+      <h3>Use SOW labels</h3>
+      <p>Trello labels are useful to group multiple tasks together, as well as to draw attention to certain cards as we work.</p>
+      
+      <p>Labels are group tasks by SOW line item number. Create a label named "SOW 1.1" and it will show up on status reports as SOW line item 1.1. The color doesn't matter, but I use green for all SOW labels.</p>
+      <p>Any card with a label named "exclude from trunk" will not appear on any Trunk status report. The card itself is still indexed in Trunk, however.</p>
+      
+      <h3>Move cards to a "Completed Work" list as each task is finished</h3>
+      <p>It is important to keep cards in the list that accurately reflects the status of the task. Usually, this is as simple as moving cards to a "Completed Work" list as soon as the task is complete. Trunk reports show the time that a card was moved to a list for the "status date" of the task. The task is "100% complete" unless there is a checklist on the card (mentioned elsewhere). In other words, if card is moved to "Completed Work" on Monday, it will appear on the daily status report for Monday, and the weekly status report will also show it completed on Monday.</p>
+      <p>It is recommended to create a new "Completed Work" list for each week. Not only is it nice to think about work one week at a time, this improves organization and navigation in Trello too. The Trunk weekly status report shows all items in a selected "Completed Work: *" list. Name each lists as "Completed Work: 1", or just "Completed Work" to keep all tasks on the weekly report throughout the engagement.</p>
+      <p>Comments, descriptions, and labels do not affect the status date.</p>
+      <p>When a card is moved to "Blockers", it will appear on status reports with that day's status until the card is moved to another list.</p>
+      
+      <h3>Add a description to completed tasks</h3>
+      <p>Once a task is fully completed, or the requirements for the recommendation have been collected, create a description that summarizes the work. Keep in mind the intended audiences of the report in order to create a useful description for all stakeholders.</p>
+      
+      <h3>Use card checklists to track progress on complex tasks</h3>
+      <p>The weekly status report includes a column for the "% complete" of each task. If a Trello card contains a checklist, this column will show the percentage corresponding to the number of items completed in the checklist.</p>
+      <p>In Trello, when a card URL is placed in a checklist, the card's title is shown as the checklist item rather than the URL itself.</p>
+      <p>Information about the checklist beyond just the completion % is not shown on Trunk reports, and the tasks which are checklist items will appear as normal.</p>
+      
+      <h3>Archive cards that don't matter</h3>
+      <p>If a card is a duplicate, or no longer of any value, you can archive it. The card can be restored, and it is still searchable in Trello, but it will not appear in Trunk status reports.</p>
+      <p>As a gift to your future self, leave a comment explaining why when you archive a card.</p>
+      
+      <h3>Screenshots, data samples, links are your friend</h3>
+      <p>Trello makes it easy to organize supporting information right along with the task that it belongs to. Paste a screenshot, URL, or file and it will be attached to the card. A picture is worth a thousand words!</p>
+      
+      <h3>Add to the backlog at any time</h3>
+      <p>Whenever you identify (or even think about) a task that needs to be done, add it to the backlog. Consider adding a comment to provide more information--remember the 5 W's.</p>
+      <p>Add tasks to the backlog in order to remain in a state of flow. Add tasks to acknoledge the customer's concern, and yet remain focused on the task at hand.</p>
+      
+     <h3>Use Markdown formatting</h3>
+     <p>Trello and Trunk reports support <a href="https://en.wikipedia.org/wiki/Markdown">Markdown</a> formatting. Essentially, this a human-readable rich text format. Text with markdown sequences must be escaped, so place commands, queries, error messages, etc. in backticks for inline formatting, or surround with triple backticks on top and bottom for multi-line formatting. Examples: </p>
+     <p><a href="https://help.trello.com/article/821-using-markdown-in-trello">How To Format Your Text in Trello</a></p>
+     
+     <h3>Use Trello Tags</h3>
+     <p>Trello's tags are really useful, both for Trello itself and Trunk's reporting and analytics capabilties. </p>
+     
+     <p>Tags are mostly used to group similar tasks together, just like you might tag email messages. Trunk's Daily &amp; Weekly Status Reports, for example, can group tasks together by cards labeled with "SOW x.y", where "x" and "y" represent line-item numbers from the Statement Of Work (SOW).</p>
+     <p>These SOW tags can optionally contain a name, which is a label in the format of "SOW x.y: foo phase", where "foo phase" is the name of the project phase. If specified, Trunk reports will use this human-friendly name in place of the SOW #. Multiple SOW # labels can contain the same name (belong to the same project phase).</p>
+      </html>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <html><a name="create_reports"></a>
+      <h2>Create Trunk reports</h2>
+      <h3>Daily Status reports</h3>
+      <p>Tasks that were moved to the "Completed Work" list will appear on that day's status report. The card title is the task name and the card description is the activity description.</p>
+      <p>Copy and paste the sections of the Daily Status Report dashboard into Outlook and send as an email. It may be necessary to adjust the column spacing.</p>
+
+      <h3>Weekly Status reports</h3>
+      <p>Tasks are listed in "Completed Activities" section according to the day they are moved to the "Completed Work" list. The card title is the task name and the card description is the activity description. </p>
+      <p>Copy and paste the sections of the Weekly Status Report dashboard into the Splunk PS status report template. It may be necessary to adjust the font but markdown formatting will transfer correctly.</p>
+
+      </html>
+    </panel>
+  </row>
+</dashboard>

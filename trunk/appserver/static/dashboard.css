@@ -1,0 +1,76 @@
+#card_list th[data-sort-key=comment] {
+  width: 200px;
+}
+
+#card_list th[data-sort-key=Date] {
+  width: 90px;
+}
+
+#taskTable th[data-sort-key=Date] {
+  width: 90px;
+}
+
+#wipTable th[data-sort-key=Date] {
+  width: 90px;
+}
+
+#blockerTable th[data-sort-key=Date] {
+  width: 90px;
+}
+
+#taskTable th[data-sort-key=SOW] {
+  width: 100px;
+}
+
+#wipTable th[data-sort-key=SOW] {
+  width: 100px;
+}
+
+#blockerTable th[data-sort-key=SOW] {
+  width: 100px;
+}
+
+#taskTable th[data-sort-key=Activity] {
+  width: 300px;
+}
+
+#wipTable th[data-sort-key=Activity] {
+  width: 300px;
+}
+
+#blockerTable th[data-sort-key=Activity] {
+  width: 300px;
+}
+
+#taskTable th[data-sort-key=complete_percent] {
+  width: 100px;
+}
+
+#recommendationTable th[data-sort-key=item] {
+  width: 300px;
+}
+
+#header-panel {
+  white-space: pre-line;
+}
+
+#mypanel {
+  white-space: pre-line;
+}
+
+.show-global-filters {
+  display: none;
+}
+
+.table-drilldown>tbody>tr>td {
+  color: inherit;
+}
+
+.table-drilldown>tbody>tr>td:hover {
+  color: inherit;
+}
+
+.table-drilldown-row>tbody>tr:hover>td {
+  color: inherit;
+}
+

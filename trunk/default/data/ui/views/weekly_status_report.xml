@@ -1,0 +1,308 @@
+<form script="apply_markdown_wsr.js" hideFilters="false" hideEdit="false">
+  <label>Engagement Weekly Status Report</label>
+  <search base="scheduleSearch" id="thisSprint">
+    <query> | search list_name="$sprint$"</query>
+    <done>
+      <condition match="$job.resultCount$ &gt; 0">
+        <set token="engagement_start_date">$result.start_date$</set>
+        <set token="engagement_end_date">$result.end_date$</set>
+      </condition>
+      <condition match="$job.resultCount$ = 0">
+        <set token="engagement_start_date"></set>
+        <set token="engagement_end_date"></set>
+      </condition>
+    </done>
+    <progress>
+      <set token="engagement_start_date"></set>
+      <set token="engagement_end_date"></set>
+    </progress>
+  </search>
+  <search id="base">
+    <query>`get_board($trello_board$)` | `get_checklist_status` | `get_card_details` | `get_card_description_fields`</query>
+  </search>
+  <search base="base">
+    <query>| search list_name="On site details" action_data_card_name="Engagement Info" </query>
+    <done>
+      <condition match="$job.resultCount$ &gt; 0">
+        <set token="engagement_summary">$result.Summary$</set>
+        <set token="engagement_customer">$result.Customer$</set>
+        <set token="customer_short_name">$result.customer_short_name$</set>
+        <set token="engagement_location">$result.Location$</set>
+        <set token="engagement_info_url">$result.action_data_card_shortLink$</set>
+        <set token="engagement_sow_number">$result.sow_number$</set>
+        <eval token="report_date">strftime(now(),"%a, %B %d, %Y")</eval>
+      </condition>
+      <condition match="$job.resultCount$ = 0">
+        <set token="engagement_summary"></set>
+        <set token="engagement_dates"></set>
+        <set token="engagement_customer"></set>
+        <set token="customer_short_name"></set>
+        <set token="engagement_location"></set>
+        <set token="engagement_sow_number"></set>
+      </condition>
+    </done>
+    <progress>
+      <set token="engagement_summary"></set>
+      <set token="engagement_dates"></set>
+      <set token="engagement_customer"></set>
+      <set token="customer_short_name"></set>
+      <set token="engagement_location"></set>
+      <set token="engagement_sow_number"></set>
+    </progress>
+  </search>
+  <search id="stakeholders" base="base">
+    <query>|  search list_name="Stakeholders" | `format_wsr_table_base(Stakeholders)` </query>
+  </search>
+  <search base="stakeholders" id="splunk_stakeholders">
+    <query>| search Organization=Splunk  | stats values(Email) as Emails | eval Emails=mvjoin(Emails,"; ")</query>
+    <done>
+      <condition>
+        <set token="splunk_stakeholders_email">$result.Emails$</set>
+      </condition>
+    </done>
+  </search>
+  <search base="stakeholders" id="customer_stakeholders">
+    <query>| search NOT Organization=Splunk | stats values(Email) as Emails | eval Emails=mvjoin(Emails,"; ")</query>
+    <done>
+      <condition>
+        <set token="customer_stakeholders_email">$result.Emails$</set>
+      </condition>
+    </done>
+  </search>
+  <fieldset submitButton="false" autoRun="true">
+    <input type="dropdown" token="consultant" searchWhenChanged="true">
+      <label>List boards for Consultant</label>
+      <fieldForLabel>action_memberCreator_fullName</fieldForLabel>
+      <fieldForValue>action_memberCreator_id</fieldForValue>
+      <search>
+        <query>
+          | from savedsearch:"engagement board and member lookup" 
+          | stats latest(action_memberCreator_id) by action_memberCreator_fullName
+          | rename latest(*) as *
+          | streamstats count
+          | eval count=if(match(action_memberCreator_fullName,"$env:user_realname$"),0,count) 
+          | sort count
+        </query>
+        <earliest>1</earliest>
+      </search>
+      <selectFirstChoice>true</selectFirstChoice>
+      <prefix>action_memberCreator_id=</prefix>
+    </input>
+    <input type="dropdown" token="trello_board" searchWhenChanged="true">
+      <selectFirstChoice>true</selectFirstChoice>
+      <label>Engagement</label>
+      <fieldForLabel>action_data_board_name</fieldForLabel>
+      <fieldForValue>action_data_board_shortLink</fieldForValue>
+      <search>
+        <query>
+          | from savedsearch:"engagement board and member lookup"
+          | search $consultant$
+          | stats latest(action_data_board_shortLink) as action_data_board_shortLink latest(_time) as _time latest(action_data_board_name) as action_data_board_name by action_data_board_id
+          | sort - _time
+        </query>
+        <earliest>1</earliest>
+        <latest>now</latest>
+      </search>
+      <prefix>"action_data_board_shortLink"=</prefix>
+    </input>
+    <input type="dropdown" token="sprint" searchWhenChanged="true">
+      <selectFirstChoice>true</selectFirstChoice>
+      <label>Sprint ("Completed Work:" list)</label>
+      <fieldForLabel>list_name</fieldForLabel>
+      <fieldForValue>list_name</fieldForValue>
+      <search base="base">
+        <query>| search list_name="Completed Work*" | stats count by list_name | sort - list_name</query>
+      </search>
+    </input>
+    <input type="checkbox" token="exclude_schedule">
+      <label>Exclude schedule from report?</label>
+      <choice value="exclude">Exclude</choice>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <html>
+        <h3>Enagement Details</h3>
+        <div>
+          <i>from the <a href="https://trello.com/c/$engagement_info_url$" target="_blank">Engagement Info</a> card in the "On site details" list</i>
+        </div>
+        <div>
+          <span>Customer: </span>
+          <span class="report" id="cust_name">$engagement_customer$</span>
+        </div>
+        <div>
+          <span>Customer Short Name: </span>
+          <span class="report" id="customer_short_name">$customer_short_name$</span>
+        </div>
+        <div>
+          <span>Engagement Location: </span>
+          <span class="report" id="location">$engagement_location$</span>
+        </div>
+        <div>
+          <span>SOW #: </span>
+          <span class="report" id="sow_number">$engagement_sow_number$</span>
+        </div>
+        <div>
+          <span>Report summary: </span>
+          <span class="report" id="summary">$engagement_summary$</span>
+        </div>
+        <br/>
+        <div>
+          <span>Consultant: </span>
+          <span class="report" id="consultant_name">$env:user_realname$</span>
+        </div>
+        <div>
+          <span>Report created date: </span>
+          <span class="report" id="complete_date">$report_date$</span>
+        </div>
+        <div>
+          <span>Report period start date: </span>
+          <span class="report" id="date_start">$engagement_start_date$</span>
+        </div>
+        <div>
+          <span>Report period end date: </span>
+          <span class="report" id="date_end">$engagement_end_date$</span>
+        </div>
+      </html>
+      <html rejects="$engagement_customer$">
+        <p>Create a card named Engagement Info with "customer: <i>Your Customer</i>" in the card description</p>
+      </html>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table id="tasks">
+        <title>$sprint$ - $completed_count$ tasks</title>
+        <search base="base">
+          <done>
+            <condition>
+              <set token="completed_count">$job.resultCount$</set>
+            </condition>
+          </done>
+          <query>| search NOT list_name IN ("Stakeholders", "On site details", "Recommendations") NOT action_data_label_name="comment/question" | `summarize_by_sow` | search list_name="$sprint$" OR list_name="Work In Process" | sort - task_dates | fields SOW SOW_label task_dates task_description percent_complete list_name _drilldown</query>
+        </search>
+        <option name="count">100</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">row</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+        <drilldown target="_blank">
+          <link>$row._drilldown|n$</link>
+        </drilldown>
+      </table>
+      <table id="issues" depends="$blockers$">
+        <title>Issues - $blocker_count$</title>
+        <search base="base">
+          <query>| `format_wsr_table_base(Blockers)` | `format_wsr_table_issues` | fields issue_status description remediation _drilldown | fields - _time</query>
+          <done>
+            <condition match="$job.resultCount$ &gt; 0">
+              <set token="blocker_count">$job.resultCount$</set>
+              <set token="blockers">true</set>
+            </condition>
+            <condition match="$job.resultCount$ = 0">
+              <set token="blocker_count">$job.resultCount$</set>
+              <unset token="blockers"></unset>
+            </condition>
+          </done>
+        </search>
+        <option name="count">100</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">row</option>
+        <option name="percentagesRow">false</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+        <drilldown target="_blank">
+          <link>$row._drilldown|n$</link>
+        </drilldown>
+      </table>
+      <html rejects="$blockers$">
+        <div>
+            <h3>Hurray! No blockers!</h3>
+        </div>
+      </html>
+      <table id="recommendations">
+        <title>Recommendations - $recommendation_count$</title>
+        <search base="base">
+          <query>| `format_wsr_table_base(Recommendations*)` | `format_wsr_table_recommendations` | fields recommendation_item details | fields - _time</query>
+          <done>
+            <condition>
+              <set token="recommendation_count">$job.resultCount$</set>
+            </condition>
+          </done>
+        </search>
+        <option name="count">100</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">row</option>
+        <option name="percentagesRow">false</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+        <drilldown target="_blank">
+          <link>$row._drilldown|n$</link>
+        </drilldown>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table id="schedule" rejects="$exclude_schedule$">
+        <title>Project Schedule - $schedule_count$</title>
+        <search base="base" id="scheduleSearch">
+          <query>| search list_name="Completed Work*" NOT label="summary" 
+| `format_wsr_table_base(Completed Work*)` 
+| stats min(min_status_time) as start_date max(_time) as end_date dc(Date) as days by list_name
+| convert ctime(*_date) timeformat="%a %m-%d" 
+| rex field=list_name ".*\:(?&lt;project_week&gt;.*)" 
+| eval hours_completed=days*8</query>
+          <done>
+            <condition>
+              <set token="schedule_count">$job.resultCount$</set>
+            </condition>
+          </done>
+        </search>
+        <option name="count">100</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">row</option>
+        <option name="percentagesRow">false</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+        <drilldown target="_blank">
+          <link>$row._drilldown|n$</link>
+        </drilldown>
+      </table>
+      <table id="contacts">
+        <title>Stakeholders - $stakeholder_count$</title>
+        <search base="base">
+          <query>
+            | `format_wsr_table_base(Stakeholders)` 
+            | search NOT Organization="Splunk" NOT report="no" 
+            | eval contact_name=action_data_card_name, contact_email=Email, contact_location=Location, contact_role=Role, contact_phone=Phone
+            | fields contact_* _drilldown
+          </query>
+          <done>
+            <condition>
+              <set token="stakeholder_count">$job.resultCount$</set>
+            </condition>
+          </done>
+        </search>
+        <option name="count">100</option>
+        <option name="drilldown">row</option>
+        <option name="rowNumbers">false</option>
+        <drilldown target="_blank">
+          <link>$row._drilldown|n$</link>
+        </drilldown>
+      </table>
+      <html>
+        <div>
+          <bold>Customers:</bold> $customer_stakeholders_email$</div>
+        <div>
+          <bold>Splunkers:</bold> $splunk_stakeholders_email$</div>
+      </html>
+    </panel>
+  </row>
+</form>

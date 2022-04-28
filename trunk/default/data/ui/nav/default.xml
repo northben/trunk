@@ -1,0 +1,32 @@
+<nav search_view="search" color="#297ba5">
+  <collection label="Getting Started">
+    <view name="tutorial" default="true" />
+    <view name="build_a_board_workshop" />
+  </collection>
+  <collection label="Status Reports">
+    <view name="engagement_daily_status_report" />
+    <view name="weekly_status_report" />
+    <view name="engagement_weekly_status_report_with_sow_item_summary" />
+  </collection>
+  <collection label="Delivery Management">
+    <view name="engagement_summary" />
+    <view name="engagement_stakeholders" />
+    <view name="trello_board_activity" />
+  </collection>
+  <collection label="Knowledge Objects">
+    <a href="///app/trunk/search?q=search%20eventtype%3Dtrello_action">search: eventtype=trello_action</a>
+    <a href="///manager/trunk/data/macros">Trunk macros</a>
+  </collection>
+  <collection label="Other">
+  <collection label="Reports">
+    <saved source="all" />
+  </collection>
+    <view name="dashboards"/>
+    <view name="search" />
+    <view name="datasets" />
+    <view name="reports" />
+    <view name="alerts" />
+    <a href="///app/trunk/search?q=search%20index%3D_internal%20source%3D*%2Fta_trello_webhook_trello_team.log">search: trello_webhook_trello_team.log</a>
+    <a href="///app/trunk/search?q=search%20index%3D_internal%20source%3D*splunkd.log%20trello">search: source=*splunkd.log trello</a>
+  </collection>
+</nav>

@@ -1,0 +1,217 @@
+<form onunloadCancelJobs="true" stylesheet="dsr.css" script="apply_markdown.js">
+  <search ref="dsr_today" id="dsr_today">
+    <earliest>$time.earliest$</earliest>
+    <latest>$time.latest$</latest>
+  </search>
+  <search ref="dsr_blockers" id="dsr_blockers">
+    <earliest>$time.earliest$</earliest>
+    <latest>$time.latest$</latest>
+  </search>
+  <search ref="dsr_questions_comments" id="dsr_questions_comments">
+    <earliest>$time.earliest$</earliest>
+    <latest>$time.latest$</latest>
+  </search>
+  <search ref="trunk_stakeholders" id="stakeholders">
+    <earliest>$time.earliest$</earliest>
+    <latest>$time.latest$</latest>
+  </search>
+  <search base="stakeholders">
+    <query>| search $board$ $stakeholder_organization$ | stats values(Email) as Emails | replace "*" with "*; " in Emails | nomv Emails</query>
+    <done>
+      <condition>
+        <set token="stakeholders_email">$result.Emails$</set>
+      </condition>
+    </done>
+  </search>
+  <label>Engagement Daily Status Report</label>
+  <fieldset submitButton="false" autoRun="true">
+    <input type="time" token="time" searchWhenChanged="true">
+      <label>Search time range</label>
+      <default>
+        <earliest>-90d@d</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+    <input type="dropdown" token="board" searchWhenChanged="true">
+      <label>Board</label>
+      <fieldForLabel>action_data_board_name</fieldForLabel>
+      <fieldForValue>action_data_board_name</fieldForValue>
+      <search base="dsr_today">
+        <query>| stats count by action_data_board_name</query>
+      </search>
+      <prefix>action_data_board_name="</prefix>
+      <suffix>"</suffix>
+    </input>
+    <input type="dropdown" token="status_date" searchWhenChanged="true">
+      <label>Status Date</label>
+      <search base="dsr_today" id="status_date_query">
+        <query>| search $board$ | bin _time as bin_time span=1d 
+        | stats count by bin_time
+| eval bin_time_format=strftime(bin_time, "%Y-%m-%d %a") 
+| eval status_date_yesterday=relative_time(bin_time,"-d")
+| eval yesterday_format=strftime(relative_time(bin_time, "-d@d"), "%Y-%m-%d %a") 
+| sort - bin_time</query>
+      </search>
+      <fieldForLabel>bin_time_format</fieldForLabel>
+      <fieldForValue>bin_time</fieldForValue>
+      <change>
+        <set token="status_date_format">$row.bin_time_format$</set>
+        <set token="yesterday_format">$row.yesterday_format$</set>
+        <set token="status_date_yesterday">$row.status_date_yesterday$</set>
+      </change>
+    </input>
+    <input type="radio" token="fieldz" searchWhenChanged="true">
+      <label>Include Fields</label>
+      <choice value="&quot;&quot;">None</choice>
+      <choice value="list_name">list_name</choice>
+      <default>list_name</default>
+    </input>
+    <input type="radio" token="drilldown_global">
+      <label>Drilldown</label>
+      <choice value="row">Enabled</choice>
+      <choice value="none">Disabled</choice>
+      <default>row</default>
+    </input>
+  </fieldset>
+  <row>
+    <panel depends="$today$">
+      <html>Shows cards that were created or the status was updated today. Cards are grouped by SOW label.</html>
+      <table id="today_markdown">
+        <title>Today ($status_date_format$)</title>
+        <search base="dsr_today">
+          <done>
+            <condition match="$job.resultCount$ &gt; 0">
+              <set token="today">true</set>
+            </condition>
+            <condition>
+              <unset token="today"></unset>
+            </condition>
+          </done>
+          <query>| search $board$ | bin _time as bin_time span=1d | where bin_time==$status_date$ | `remove_empty_fields` | `dsr_fields($fieldz$)` | `dsr_format`</query>
+        </search>
+        <option name="count">100</option>
+        <option name="drilldown">$drilldown_global$</option>
+        <option name="wrap">true</option>
+        <drilldown>
+          <link target="_blank">$row._drilldown|n$</link>
+        </drilldown>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel depends="$yesterday$">
+      <html>Shows cards that were created or the status was updated yesterday. Cards are grouped by SOW label.</html>
+      <table id="yesterday_markdown">
+        <title>Yesterday ($yesterday_format$)</title>
+        <search base="dsr_today">
+          <query>| search $board$ | where _time&gt;$status_date_yesterday$ AND _time&lt;$status_date$ | `remove_empty_fields` | `dsr_fields($fieldz$)` | `dsr_format`</query>
+          <done>
+            <condition match="$job.resultCount$ &gt; 0">
+              <set token="yesterday">true</set>
+            </condition>
+            <condition>
+              <unset token="yesterday"></unset>
+            </condition>
+          </done>
+        </search>
+        <option name="count">100</option>
+        <option name="drilldown">cell</option>
+        <option name="wrap">true</option>
+        <drilldown>
+          <link target="_blank">$row._drilldown|n$</link>
+        </drilldown>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel depends="$blockers$">
+      <html>Shows all cards in Blockers list. Cards are grouped by SOW label.</html>
+      <table id="blockers_markdown">
+        <title>Blockers</title>
+        <search base="dsr_blockers">
+          <query>| search $board$ | `remove_empty_fields` | `dsr_fields($fieldz$)` | `dsr_format`</query>
+          <done>
+            <condition match="$job.resultCount$ &gt; 0">
+              <set token="blockers">true</set>
+            </condition>
+            <condition>
+              <unset token="blockers"></unset>
+            </condition>
+          </done>
+        </search>
+        <option name="count">100</option>
+        <option name="drilldown">$drilldown_global$</option>
+        <drilldown>
+          <link target="_blank">$row._drilldown|n$</link>
+        </drilldown>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel depends="$comments/questions$">
+      <html>Shows all cards labeled with "comment/question". Cards are grouped by SOW label.</html>
+      <table id="commentsquestions_markdown">
+        <title>Comments/Questions</title>
+        <search base="dsr_questions_comments">
+          <query>| search $board$ | `remove_empty_fields` | `dsr_fields($fieldz$)` | `dsr_format`</query>
+          <done>
+            <condition match="$job.resultCount$ &gt; 0">
+              <set token="comments/questions">true</set>
+            </condition>
+            <condition>
+              <unset token="comments/questions"></unset>
+            </condition>
+          </done>
+        </search>
+        <option name="drilldown">$drilldown_global$</option>
+        <drilldown>
+          <link target="_blank">$row._drilldown|n$</link>
+        </drilldown>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <input type="radio" token="stakeholder_organization">
+        <label>Include Stakeholders</label>
+        <choice value="*">All</choice>
+        <search base="stakeholders">
+          <query>
+            | search $board$ 
+            | stats count by Organization
+          </query>
+        </search>
+        <default>*</default>
+        <fieldForLabel>Organization</fieldForLabel>
+        <fieldForValue>Organization</fieldForValue>
+        <prefix>Organization="</prefix>
+        <suffix>"</suffix>
+      </input>
+      <table id="stakeholderTable">
+        <title>Stakeholders</title>
+        <search base="stakeholders">
+          <query>
+            | search $board$ $stakeholder_organization$
+            | table Organization Name Email Role Phone Location
+          </query>
+        </search>
+        <option name="count">100</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">$drilldown_global$</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+        <drilldown target="_blank">
+          <link>$row._drilldown|n$</link>
+        </drilldown>
+      </table>
+      <html>
+        <div>$stakeholders_email$</div>
+      </html>
+    </panel>
+  </row>
+</form>

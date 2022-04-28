@@ -1,0 +1,568 @@
+[views/engagement_activity_report]
+version = 6.6.2
+modtime = 1504893095.597095000
+
+[views/engagement_activity__weekly_report]
+version = 6.6.2
+modtime = 1504186011.105930000
+
+[macros/engagement_detail_base%283%29]
+access = read : [ * ], write : [ admin ]
+export = none
+version = 6.6.2
+modtime = 1506999117.603170000
+
+[macros/format_activity_table%281%29]
+access = read : [ * ]
+export = none
+version = 7.1.3
+modtime = 1540836976.598413000
+
+[macros/get_board%281%29]
+access = read : [ * ]
+export = none
+version = 7.1.3
+modtime = 1541180724.048701000
+
+[macros/get_card_details]
+export = none
+version = 7.3.0
+modtime = 1572977502.041264000
+
+[macros/get_card_labels]
+access = read : [ * ]
+export = none
+version = 7.2.6
+modtime = 1556682084.416168000
+
+[views/engagement_activity_20]
+access = read : [ * ]
+export = none
+version = 6.6.2
+modtime = 1506999334.201091000
+
+[views/engagement_status_report_builder]
+access = read : [ admin ], write : [ admin ]
+export = none
+owner = nobody
+version = 7.1.3
+modtime = 1537557947.647842000
+
+[views/engagement_status_report_builder_20]
+access = read : [ * ]
+export = none
+version = 6.6.2
+modtime = 1507173235.498998000
+
+[macros/format_wsr_table_base%281%29]
+access = read : [ * ]
+export = none
+version = 7.1.3
+modtime = 1540836901.962035000
+
+[macros/format_wsr_table_completed]
+access = read : [ * ]
+export = none
+version = 7.2.1
+modtime = 1543193669.606828000
+
+[macros/format_wsr_table_contacts]
+access = read : [ * ]
+export = none
+version = 7.2.1
+modtime = 1543194109.161036000
+
+[macros/format_wsr_table_issues]
+access = read : [ * ]
+export = none
+version = 7.3.0
+modtime = 1568733956.302079000
+
+[macros/format_wsr_table_recommendations]
+access = read : [ * ]
+export = none
+version = 7.3.0
+modtime = 1568734423.470304000
+
+[macros/format_wsr_table_project_schedule]
+access = read : [ * ]
+export = none
+version = 7.2.1
+modtime = 1543194123.334483000
+
+[views/engagement_status_report_builder_20_project_schedule]
+access = read : [ * ]
+export = none
+version = 6.6.2
+modtime = 1507154231.994031000
+
+[views/engagement_activity]
+version = 7.0.1
+modtime = 1517458904.782733000
+
+[views/engagement_weekly_status_report_builder__complete]
+access = read : [ * ]
+export = none
+version = 6.6.2
+modtime = 1509566344.214989000
+
+[macros/get_checklist_status]
+access = read : [ * ]
+export = none
+version = 6.6.2
+modtime = 1510091535.786439000
+
+[macros/format_dsr_table%281%29]
+access = read : [ * ]
+export = none
+version = 7.3.0
+modtime = 1569443680.256772000
+
+[macros/format_dsr_table_completed]
+access = read : [ * ]
+export = none
+version = 7.2.1
+modtime = 1543194425.363417000
+
+[props/trello_webhook/EVAL-status]
+access = read : [ * ], write : [ admin ]
+owner = nobody
+version = 7.0.1
+modtime = 1518065750.155820000
+
+[props/trello_webhook/EVAL-status_time]
+access = read : [ * ], write : [ admin ]
+owner = nobody
+version = 7.0.1
+modtime = 1518065753.839646000
+
+[eventtypes/trello_action]
+access = read : [ * ]
+export = none
+owner = admin
+version = 6.6.2
+modtime = 1510556177.164042000
+
+[]
+access = read : [ * ], write : [ admin ]
+export = none
+version = 6.6.2
+modtime = 1510752680.067268000
+
+[views/engagement_daily_status_report]
+owner = admin
+version = 7.0.3
+modtime = 1535558448.789035000
+
+[savedsearches/Trello%20webhook%20log]
+access = read : [ admin ], write : [ admin ]
+export = none
+owner = admin
+version = 6.6.2
+modtime = 1515167412.549519000
+
+[macros/get_card_description_fields]
+access = read : [ * ], write : [ admin ]
+export = none
+owner = admin
+version = 7.3.0
+modtime = 1568736896.002669000
+
+[props/trello_webhook/EVAL-comment_text]
+access = read : [ * ], write : [ admin ]
+export = none
+owner = northben
+version = 7.0.1
+modtime = 1518065734.940172000
+
+[savedsearches/engagement%20board%20and%20member%20lookup]
+access = read : [ * ]
+export = none
+owner = admin
+version = 7.3.0
+modtime = 1588357151.626635000
+
+[props/trello_webhook/EVAL-list_name]
+access = read : [ * ], write : [ admin ]
+owner = nobody
+version = 7.0.1
+modtime = 1518065744.796141000
+
+[views/trello_board_activity]
+owner = admin
+version = 7.3.0
+modtime = 1563331488.204285000
+
+[savedsearches/Trunk%20collect%20descriptions%20for%20copied%20cards]
+version = 7.0.3
+modtime = 1525107931.246283000
+
+[macros/drop_agg]
+access = read : [ * ]
+export = none
+owner = northben
+version = 7.0.3
+modtime = 1524195225.343632000
+
+[macros/copied_card_append_makeresults_for_map]
+access = read : [ * ]
+export = none
+owner = admin
+version = 7.0.3
+modtime = 1524195424.233610000
+
+[macros/http_unescape]
+access = read : [ * ]
+export = none
+owner = admin
+version = 7.0.3
+modtime = 1525107231.630522000
+
+[inputs/webhook%3A%2F%2Ftrello_secure]
+owner = admin
+version = 7.0.3
+modtime = 1536156523.987770000
+
+[views/trello_card_cloner]
+owner = admin
+version = 7.0.3
+modtime = 1535659156.186423000
+
+[eventtypes/webhook_subscription]
+access = read : [ * ]
+export = none
+owner = admin
+version = 7.0.3
+modtime = 1536276411.732510000
+
+[passwords/credential%3A__REST_CREDENTIAL__%23TA-trello-webhook%23data%2Finputs%2Ftrello_team%3Asplunkps%60%60splunk_cred_sep%60%601%3A]
+owner = splunk-system-user
+version = 7.0.3
+modtime = 1535420284.851612000
+
+[inputs/trello_team%3A%2F%2Fgoodfoo]
+owner = admin
+version = 7.1.3
+modtime = 1537406666.598207000
+
+[views/weekly_status_report]
+version = 7.3.0
+modtime = 1588357223.492214000
+
+[views/tutorial]
+owner = admin
+version = 7.3.0
+modtime = 1569251960.330767000
+
+[views/build_a_board_workshop]
+version = 7.3.0
+modtime = 1563974338.116721000
+
+[views/engagement_summary__time_spent]
+access = read : [ * ], write : [ admin ]
+export = none
+owner = admin
+version = 7.1.3
+modtime = 1540842333.916825000
+
+[views/daily_status_report]
+access = write : [ admin ]
+export = none
+owner = nobody
+version = 7.3.0
+modtime = 1580346494.011292000
+
+[macros/get_card_cloned%281%29]
+access = read : [ * ], write : [ admin ]
+export = none
+owner = admin
+version = 7.2.6
+modtime = 1556682679.669734000
+
+[savedsearches/trunk%20template%20boards]
+access = read : [ trunk_user ], write : [ admin ]
+export = none
+owner = northben
+version = 7.2.6
+modtime = 1556117663.562045000
+
+[views/engagement_summary]
+access = read : [ * ], write : [ admin ]
+export = none
+owner = admin
+version = 7.3.0
+modtime = 1581465677.196819000
+
+[props/trello_webhook/EVAL-status_edit]
+access = read : [ * ], write : [ admin ]
+export = none
+owner = admin
+version = 7.2.1
+modtime = 1542749472.590767000
+
+[macros/summarize_by_sow%281%29]
+access = read : [ * ], write : [ admin ]
+export = none
+owner = northben
+version = 7.3.0
+modtime = 1568750332.097841000
+
+[props/trello_webhook/EVAL-alias]
+access = read : [ * ], write : [ admin ]
+export = none
+owner = admin
+version = 7.2.1
+modtime = 1546979754.716856000
+
+[props/trello_webhook/EVAL-date_override]
+access = read : [ * ], write : [ admin ]
+export = none
+owner = admin
+version = 7.2.1
+modtime = 1546982638.187631000
+
+[props/trello_webhook/EVAL-target_date]
+access = read : [ * ], write : [ admin ]
+export = none
+owner = admin
+version = 7.2.1
+modtime = 1546982802.712746000
+
+[props/trello_webhook/EXTRACT-label_2]
+access = read : [ * ]
+export = none
+owner = admin
+version = 7.2.6
+modtime = 1556687262.090307000
+
+[props/trello_webhook/EXTRACT-label_3]
+access = read : [ * ]
+export = none
+owner = admin
+version = 7.2.6
+modtime = 1556679402.265381000
+
+[props/trello_webhook/EXTRACT-label_1]
+version = 7.2.6
+modtime = 1556681309.973745000
+
+[props/trello_webhook/EXTRACT-label_4]
+access = read : [ * ]
+export = none
+owner = admin
+version = 7.2.6
+modtime = 1556681387.072675000
+
+[props/trello_webhook/EXTRACT-comment_1]
+access = read : [ * ]
+export = none
+owner = admin
+version = 7.2.6
+modtime = 1556684632.890158000
+
+[props/trello_webhook/EXTRACT-comment_2]
+access = read : [ * ]
+export = none
+owner = admin
+version = 7.2.6
+modtime = 1556684823.284861000
+
+[props/trello_webhook/EXTRACT-hours_spent]
+access = read : [ * ]
+export = none
+owner = admin
+version = 7.2.6
+modtime = 1556746650.324659000
+
+[props/trello_webhook/EXTRACT-list_name_1]
+access = read : [ * ]
+export = none
+owner = admin
+version = 7.2.6
+modtime = 1556754272.089894000
+
+[props/trello_webhook/EXTRACT-list_name_2]
+access = read : [ * ]
+export = none
+owner = admin
+version = 7.2.6
+modtime = 1556754281.150523000
+
+[props/trello_webhook/EXTRACT-label_sow_4]
+version = 7.2.6
+modtime = 1556840431.009031000
+
+[inputs/trello_team%3A%2F%2Fsplunkps2]
+owner = admin
+version = 7.2.6
+modtime = 1561151342.164840000
+
+[transforms/organization]
+access = read : [ * ]
+export = none
+owner = admin
+version = 7.3.0
+modtime = 1563384777.563126000
+
+[props/trello_webhook/REPORT-1_description_fields]
+access = read : [ * ]
+export = none
+owner = admin
+version = 7.3.0
+modtime = 1563308084.648787000
+
+[views/engagement_stakeholders]
+access = read : [ * ]
+export = none
+owner = admin
+version = 7.3.0
+modtime = 1563383603.945389000
+
+[nav/default]
+version = 7.3.0
+modtime = 1580408552.949311000
+
+[savedsearches/Trunk%20webhook%20log%20contains%20errors]
+owner = admin
+version = 7.3.0
+modtime = 1571106819.578019000
+
+[views/document_builder_test]
+owner = admin
+version = 7.3.0
+modtime = 1568650148.215012000
+
+[views/doc_builder_test_in_trunk]
+owner = admin
+version = 7.3.0
+modtime = 1568650519.214350000
+
+[macros/summarize_by_sow]
+access = read : [ * ]
+export = none
+owner = admin
+version = 7.3.0
+modtime = 1580519703.161028000
+
+[props/trello_webhook/EVAL-description_or_comment]
+access = read : [ * ]
+export = none
+owner = admin
+version = 7.3.0
+modtime = 1568923292.943098000
+
+[macros/unescape]
+access = read : [ * ]
+export = none
+owner = admin
+version = 7.3.0
+modtime = 1569526172.733124000
+
+[views/engagement_daily_status_report_new]
+access = read : [ * ]
+export = none
+owner = admin
+version = 7.3.0
+modtime = 1580346678.942506000
+
+[savedsearches/dsr_today]
+access = read : [ * ]
+export = none
+owner = admin
+version = 7.3.0
+modtime = 1580431471.104283000
+
+[savedsearches/dsr_questions_comments]
+access = read : [ * ]
+export = none
+owner = admin
+version = 7.3.0
+modtime = 1569522822.213117000
+
+[savedsearches/dsr_blockers]
+access = read : [ * ]
+export = none
+owner = admin
+version = 7.3.0
+modtime = 1569522882.919064000
+
+[macros/dsr_fields]
+access = read : [ * ]
+export = none
+owner = admin
+version = 7.3.0
+modtime = 1569525732.922651000
+
+[macros/dsr_format]
+access = read : [ * ]
+export = none
+owner = admin
+version = 7.3.0
+modtime = 1569525680.972982000
+
+[macros/remove_empty_fields]
+access = read : [ * ]
+export = none
+owner = admin
+version = 7.3.0
+modtime = 1569522979.278510000
+
+[macros/summarize_by_sow_add_drilldown]
+access = read : [ * ]
+export = none
+owner = admin
+version = 7.3.0
+modtime = 1569611155.632288000
+
+[macros/dsr_fields%281%29]
+access = read : [ * ]
+export = none
+owner = admin
+version = 7.3.0
+modtime = 1570632903.180426000
+
+[savedsearches/trello_action%20events%20with%20non-identical%20fields]
+access = read : [ * ]
+export = none
+owner = admin
+version = 7.3.0
+modtime = 1571113817.517318000
+
+[macros/remove_identical_fields]
+access = read : [ * ]
+export = none
+owner = admin
+version = 7.3.0
+modtime = 1571113724.444046000
+
+[lookups/trunk_status.csv]
+access = read : [ * ], write : [ admin ]
+export = system
+owner = nobody
+version = 7.3.0
+modtime = 1572563810.147269000
+
+[transforms/trunk_status]
+export = none
+owner = admin
+version = 7.3.0
+modtime = 1572552241.842760000
+
+[macros/lookup_status]
+access = read : [ * ]
+export = none
+owner = admin
+version = 7.3.0
+modtime = 1572563991.348165000
+
+[inputs/trello_team%3A%2F%2Fsplunkps3]
+owner = admin
+version = 7.3.0
+modtime = 1575321384.286958000
+
+[savedsearches/trunk_stakeholders]
+access = read : [ * ], write : [ admin ]
+export = none
+owner = admin
+version = 7.3.0
+modtime = 1580345458.484866000

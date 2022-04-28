@@ -1,0 +1,93 @@
+<form>
+  <search id="base">
+    <query>eventtype=trello_action $trello_board$
+| `http_unescape` 
+| stats latest(action_data_card_name) latest(action_data_board_name) latest(organization) latest(role) latest(phone) latest(email) latest(list_name) latest(status) by action_data_card_shortLink
+| `drop_agg` 
+| search list_name=Stakeholders NOT status=closed
+</query>
+    <earliest>$time.earliest$</earliest>
+  </search>
+  <label>Engagement Stakeholders</label>
+  <fieldset submitButton="false">
+    <input type="multiselect" token="trello_board">
+      <label>Trello Boards</label>
+      <fieldForLabel>action_data_board_name</fieldForLabel>
+      <fieldForValue>action_data_board_id</fieldForValue>
+      <search>
+        <query>eventtype=trello_action 
+    | stats latest(action_data_board_closed) latest(action_data_board_name) latest(_time) as _time by action_data_board_id 
+    | `drop_agg` 
+    | search NOT action_data_board_closed=True 
+    | fields - action_data_board_closed 
+    | appendpipe 
+    [ stats values(action_data_board_id) as action_data_board_id 
+    | eval action_data_board_name="All", _time=now() ] 
+| sort - _time</query>
+        <earliest>$time.earliest$</earliest>
+      </search>
+      <prefix>action_data_board_id IN (</prefix>
+      <suffix>)</suffix>
+      <valueSuffix>,</valueSuffix>
+      <delimiter>  </delimiter>
+    </input>
+    <input type="time" token="time">
+      <label>Time</label>
+      <default>
+        <earliest>-6mon@mon</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <input type="multiselect" token="stakeholder">
+        <label>Stakeholder (not Trello user)</label>
+        <delimiter>, </delimiter>
+        <fieldForLabel>action_data_card_name</fieldForLabel>
+        <fieldForValue>action_data_card_name</fieldForValue>
+        <search base="base">
+          <query>| stats values(action_data_card_name) as action_data_card_name | mvexpand action_data_card_name</query>
+        </search>
+        <prefix>action_data_card_name IN (</prefix>
+        <valuePrefix>"</valuePrefix>
+        <valueSuffix>"</valueSuffix>
+        <suffix>)</suffix>
+        <default>*</default>
+        <choice value="*">All</choice>
+      </input>
+      <input type="multiselect" token="organization">
+        <label>Organization</label>
+        <fieldForLabel>organization</fieldForLabel>
+        <fieldForValue>organization</fieldForValue>
+        <search base="base">
+          <query>| stats values(organization) | `drop_agg` | mvexpand organization</query>
+        </search>
+        <choice value="*">All</choice>
+        <default>*</default>
+        <prefix>organization IN (</prefix>
+        <suffix>)</suffix>
+        <valuePrefix>"</valuePrefix>
+        <valueSuffix>",</valueSuffix>
+        <delimiter> </delimiter>
+      </input>
+      <table>
+        <search base="base">
+          <query>| search $stakeholder$ $organization$</query>
+        </search>
+        <option name="count">100</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">row</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+        <fields>["action_data_board_name","action_data_card_name","organization","role","phone","email"]</fields>
+        <drilldown>
+          <link target="_blank">https://trello.com/c/$row.action_data_card_shortLink$</link>
+        </drilldown>
+      </table>
+    </panel>
+  </row>
+</form>

@@ -1,0 +1,201 @@
+<form version="1.1" script="custom_table_row_expansion.js, unlimited_rows.js, apply_markdown_wsr.js">
+  <label>Engagement Summary</label>
+  <search ref="dsr_today" id="base">
+    <earliest>$time.earliest$</earliest>
+    <latest>$time.latest$</latest>
+  </search>
+  <search base="base" id="table">
+    <query>
+      | search $board$ ($lists_wip$ OR ($lists_todo$) OR ($lists_completed$) OR ($lists_blockers$) OR ($lists_recommended$)) $milestone$
+    </query>
+  </search>
+  <search base="base">
+    <query>| search $board$ list_name="On site details" action_data_card_name="Engagement Info" | `get_card_description_fields`</query>
+    <done>
+      <condition match="$job.resultCount$ &gt; 0">
+        <set token="engagement_summary">$result.Summary$</set>
+        <set token="engagement_dates">$result.Dates$</set>
+        <set token="engagement_customer">$result.Customer$</set>
+        <set token="engagement_location">$result.Location$</set>
+      </condition>
+      <condition match="$job.resultCount$ = 0">
+        <unset token="engagement_summary"></unset>
+        <unset token="engagement_dates"></unset>
+        <unset token="engagement_customer"></unset>
+        <unset token="engagement_location"></unset>
+      </condition>
+    </done>
+  </search>
+  <fieldset submitButton="false" autoRun="true">
+    <input type="dropdown" token="board" searchWhenChanged="true">
+      <label>Board</label>
+      <fieldForLabel>action_data_board_name</fieldForLabel>
+      <fieldForValue>action_data_board_name</fieldForValue>
+      <search base="base">
+        <query>
+          | stats count by action_data_board_name
+        </query>
+      </search>
+      <prefix>action_data_board_name="</prefix>
+      <suffix>"</suffix>
+    </input>
+    <input type="time" token="time">
+      <label>Engagement time range</label>
+      <default>
+        <earliest>-30d@d</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+    <input type="multiselect" token="lists_todo" id="idSelectIndexTodo">
+      <label>Show "To Do" lists</label>
+      <valuePrefix>list_name="</valuePrefix>
+      <delimiter> OR </delimiter>
+      <fieldForLabel>list_name</fieldForLabel>
+      <fieldForValue>list_name</fieldForValue>
+      <search base="table">
+        <query>| search list_name!=Stakeholders list_name!="on site details" list_name="To Do*" | stats count by list_name </query>
+      </search>
+      <valueSuffix>"</valueSuffix>
+      <default>To Do*</default>
+      <choice value="">None</choice>
+    </input>
+    <input type="radio" token="lists_wip">
+      <label>Show "Work in Process" list</label>
+      <choice value="&quot;Work in Process&quot;">Yes</choice>
+      <choice value="&quot;&quot;">No</choice>
+      <default>"Work in Process"</default>
+      <prefix>list_name=</prefix>
+    </input>
+    <input type="multiselect" token="lists_completed" id="idSelectIndexCompleted">
+      <label>Show "Completed Work" lists</label>
+      <valuePrefix>list_name="</valuePrefix>
+      <delimiter> OR </delimiter>
+      <fieldForLabel>list_name</fieldForLabel>
+      <fieldForValue>list_name</fieldForValue>
+      <search base="table">
+        <query>| search list_name!=Stakeholders list_name!="on site details" list_name="Completed Work*" | stats count by list_name </query>
+      </search>
+      <valueSuffix>"</valueSuffix>
+      <default>Completed Work*</default>
+      <choice value="">None</choice>
+    </input>
+    <input type="multiselect" token="lists_recommended" id="idSelectIndexRecomended">
+      <label>Show "Recommendations:*" lists</label>
+      <valuePrefix>list_name="</valuePrefix>
+      <delimiter> OR </delimiter>
+      <fieldForLabel>list_name</fieldForLabel>
+      <fieldForValue>list_name</fieldForValue>
+      <search base="table">
+        <query>| search list_name!=Stakeholders list_name!="on site details" list_name="Recommendations*" | stats count by list_name </query>
+      </search>
+      <valueSuffix>"</valueSuffix>
+      <default>Recommendations*</default>
+      <choice value="">None</choice>
+    </input>
+    <input type="multiselect" token="lists_blockers" id="idSelectIndexBlockers">
+      <label>Show "Blockers" lists</label>
+      <valuePrefix>list_name="</valuePrefix>
+      <delimiter> OR </delimiter>
+      <fieldForLabel>list_name</fieldForLabel>
+      <fieldForValue>list_name</fieldForValue>
+      <search base="table">
+        <query>| search list_name!=Stakeholders list_name!="on site details" list_name="Blockers*" | stats count by list_name </query>
+      </search>
+      <valueSuffix>"</valueSuffix>
+      <default>Blockers*</default>
+      <choice value="">None</choice>
+    </input>
+    <input type="dropdown" token="date">
+      <label>Date</label>
+      <fieldForLabel>Date</fieldForLabel>
+      <fieldForValue>Date</fieldForValue>
+      <search base="table">
+        <query>| search $lists_wip$ OR ($lists_todo$) OR ($lists_completed$) OR ($lists_blockers$) OR ($lists_recommended$) | stats count by Date | sort Date</query>
+      </search>
+      <choice value="*">All</choice>
+      <selectFirstChoice>true</selectFirstChoice>
+    </input>
+    <input type="multiselect" token="milestone">
+      <label>SOW Milestone</label>
+      <choice value="*">All</choice>
+      <fieldForLabel>SOW</fieldForLabel>
+      <fieldForValue>SOW</fieldForValue>
+      <search base="table">
+        <query>| stats count by SOW</query>
+      </search>
+      <default>*</default>
+      <delimiter> OR </delimiter>
+      <valuePrefix>SOW="</valuePrefix>
+      <valueSuffix>"</valueSuffix>
+    </input>
+    <input type="multiselect" token="fieldz" searchWhenChanged="true">
+      <label>Fields</label>
+      <choice value="hours_spent">Hours</choice>
+      <choice value="Date">Date</choice>
+      <choice value="*milestone*">Milestone Totals</choice>
+      <choice value="Description">Comment</choice>
+      <choice value="SOW">SOW</choice>
+      <choice value="SOW_name">SOW_name</choice>
+      <choice value="complete_percent">% Complete</choice>
+      <choice value="alias">Alias</choice>
+      <choice value="target_date">Target Date</choice>
+      <choice value="objective_label">Trello "objective:" Label</choice>
+      <delimiter> </delimiter>
+      <default>SOW,SOW_name,Description</default>
+    </input>
+    <input type="radio" token="group_by">
+      <label>Group by</label>
+      <choice value="SOW">SOW # (e.g. SOW 1.1)</choice>
+      <choice value="SOW_label">SOW label (e.g. SOW 1.1: Install Splunk)</choice>
+      <choice value="SOW_name">SOW name (e.g. Install Splunk)</choice>
+      <default>SOW</default>
+      <initialValue>SOW</initialValue>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <table>
+        <title>Milestone Summary</title>
+        <search base="table">
+          <query>
+            | chart count by $group_by$ list_name 
+            | addtotals fieldname=milestone_total 
+            | fields $group_by$ "To Do*" "Work in Process" Blockers* Recommendations* "Completed Work*" milestone_total
+            | addcoltotals
+          </query>
+        </search>
+        <option name="count">10</option>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table id="unlimited_rows">
+        <title>Milestone Details</title>
+        <search base="table">
+          <query>
+            | eventstats dc(action_data_card_name) as milestone_total c(eval(match(list_name, "(?i)Work in Process"))) as wip_in_milestone c(eval(match(list_name, "(?i)Completed"))) as completed_in_milestone c(eval(match(list_name, "(?i)to do"))) as todo_in_milestone c(eval(match(list_name, "(?i)Recommendation"))) as recommendations_in_milestone c(eval(match(list_name, "(?i)Blocker"))) as blockers_in_milestone by SOW 
+            | fillnull value="N/A" SOW_name 
+            | stats values(objective_label) latest(target_date) values(complete_percent) values(alias) values(Description) values(list_name) values(blockers_in_milestone) values(wip_in_milestone) values(completed_in_milestone) values(recommendations_in_milestone) values(todo_in_milestone) values(milestone_total) values(hours_spent) values(_drilldown) values(Date) by SOW SOW_name action_data_card_name action_data_card_id | `drop_agg`
+            | fields action_data_card_name list_name $fieldz$ 
+            | convert ctime(target_date) timeformat="%Y-%m"
+            | appendpipe [| stats sum(hours_spent) as hours_spent]
+          </query>
+        </search>
+        <option name="count">100</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">row</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+        <drilldown target="_blank">
+          <link>$row._drilldown|n$</link>
+        </drilldown>
+      </table>
+    </panel>
+  </row>
+</form>

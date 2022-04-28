@@ -1,0 +1,92 @@
+<form script="cloner.js">
+  <label>Build-A-Board Workshop</label>
+  <init>
+    <set token="search_token">%</set>
+  </init>
+  <description>Is your board a little bare? Clone cards from other engagements (optionally clone first comment, label) in order to quickly get populate a board with cards. <br/>This requires the Splunk webhook token to have write permission to the Trello API.</description>
+  <fieldset submitButton="false" autoRun="false">
+    <input type="dropdown" token="target_board" searchWhenChanged="true">
+      <label>Target Board</label>
+      <fieldForLabel>action_data_board_name</fieldForLabel>
+      <fieldForValue>action_data_board_id</fieldForValue>
+      <selectFirstChoice>true</selectFirstChoice>
+      <search>
+        <query>earliest=-30d eventtype=trello_action 
+| stats latest(action_data_board_shortLink) latest(action_data_board_name) latest(_time) latest(action_data_board_closed) by action_data_board_id 
+| `drop_agg`
+| `http_unescape`
+| search NOT action_data_board_closed=True
+| sort - _time</query>
+        <done>
+          <set token="action_data_board_shortLink">$result.action_data_board_shortLink$</set>
+        </done>
+      </search>
+    </input>
+    <input type="dropdown" token="target_list" id="targetList" searchWhenChanged="false">
+      <label>Target List</label>
+      <fieldForLabel>list_name</fieldForLabel>
+      <fieldForValue>action_data_list_id</fieldForValue>
+      <search>
+        <query>earliest=-30d eventtype=trello_action action_data_board_id=$target_board$ | stats latest(list_name) latest(action_data_list_closed) latest(_time) by action_data_list_id | `drop_agg` | search list_name="To Do*" NOT action_data_list_closed=True
+        | sort - _time</query>
+        <done>
+          <condition match="$job.resultCount$ &lt; 1">
+            <set token="target_list_help_text">true</set>
+          </condition>
+          <condition match="$job.resultCount$ &gt; 0">
+            <unset token="target_list_help_text"></unset>
+          </condition>
+        </done>
+      </search>
+      <selectFirstChoice>true</selectFirstChoice>
+    </input>
+    <html depends="$target_list_help_text$">Create a card in a "To Do" list so that Trunk can see your list. <a href="https://trello.com/b/$action_data_board_shortLink$" target="_blank">Target board</a>
+    </html>
+  </fieldset>
+  <row>
+    <panel>
+      <title>Source cards</title>
+      <input type="time" token="field2">
+        <label></label>
+        <default>
+          <earliest>0</earliest>
+          <latest></latest>
+        </default>
+      </input>
+      <input type="text" token="search_token" searchWhenChanged="true" id="filterField">
+        <label>Filter</label>
+      </input>
+      <input type="radio" token="card_type">
+        <label>card type</label>
+        <choice value="&quot;Completed Work*&quot;">Completed Work</choice>
+        <choice value="&quot;Stakeholders*&quot;">Stakeholders</choice>
+        <choice value="&quot;Recommendations*&quot;">Recommendations</choice>
+        <prefix>list_name=</prefix>
+        <default>"Completed Work*"</default>
+      </input>
+      <table id="card_list">
+        <search>
+          <query>eventtype=trello_action
+| `get_card_details`
+| `get_card_description_fields` 
+| eval comment=substr(earliest_comment_text,0,1000)
+| search NOT status="deleted" $card_type$
+| eval Activity=action_data_card_name
+| eval clone_title="", clone_comment="", clone_SOW=""
+| table Date Activity clone_title comment clone_comment SOW clone_SOW action_data_card_shortLink</query>
+          <earliest>$field2.earliest$</earliest>
+          <latest>$field2.latest$</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">row</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+        <fields>["Date","Activity","clone_title","comment","clone_comment","SOW","clone_SOW"]</fields>
+      </table>
+    </panel>
+  </row>
+</form>

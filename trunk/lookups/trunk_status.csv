@@ -1,0 +1,11 @@
+status,status_time,action_data_card_closed,action_data_old_closed,action_type,action_data_listAfter_id,action_display_translationKey
+closed,true,True,,,,
+reopened,true,,True,,,
+deleted,true,,,deleteCard,,
+created,true,,,createCard,,
+emailed,true,,,emailCard,,
+copied,true,,,copyCard,,
+moved,true,,,,*,
+updated description,,,,,,action_changed_description_of_card
+commented,,,,commentCard,,
+commented,,,,updateComment,,

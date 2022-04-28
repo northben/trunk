@@ -1,0 +1,35 @@
+#taskTable th[data-sort-key=Date] {
+  width: 90px;
+}
+
+#taskTable th[data-sort-key=SOW] {
+  width: 50px;
+}
+
+#taskTable th[data-sort-key=Activity] {
+  width: 300px;
+}
+
+#taskTable th[data-sort-key=complete_percent] {
+  width: 25px;
+}
+
+#header-panel {
+  white-space: pre-line;
+}
+
+#mypanel {
+  white-space: pre-line;
+}
+
+.show-global-filters {
+  display: none;
+}
+
+.table-drilldown>tbody>tr>td {
+  color: black; 
+}
+
+* {
+  font-family: Gotham Narrow !important;
+}
